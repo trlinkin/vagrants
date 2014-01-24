@@ -8,8 +8,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "centos-64-x64-nocm"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-fusion503-nocm.box"
 
-  config.pe_build.version       = '3.1.0'
-  config.pe_build.download_root = 'https://s3.amazonaws.com/pe-builds/released'
+  pe_version = 3.1.0
+  config.pe_build.version       = pe_version
+  config.pe_build.download_root = "https://s3.amazonaws.com/pe-builds/released/#{pe_version}"
 
 ## Master
   config.vm.define :master do |master|
