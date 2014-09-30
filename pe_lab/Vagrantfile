@@ -8,9 +8,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "centos-64-x64-nocm"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-fusion503-nocm.box"
 
-  pe_version = '3.1.0'
+  pe_version = '3.3.1'
   config.pe_build.version       = pe_version
-  config.pe_build.download_root = "https://s3.amazonaws.com/pe-builds/released/#{pe_version}"
+  config.pe_build.download_root = "https://s3.amazonaws.com/pe-builds/released/:version"
 
 ## Master
   config.vm.define :master do |master|
@@ -26,10 +26,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     master.vm.provision :hosts
 
     master.vm.provision :pe_bootstrap do |pe|
+      pe.version = pe_version
       pe.role = :master
     end
 
-    config.vm.provision "shell",
+    master.vm.provision "shell",
       inline: "service iptables stop"
   end
 
@@ -43,7 +44,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     agent.vm.provision :hosts
 
     agent.vm.provision :pe_bootstrap do |pe|
-      pe.role   =  :agent
+      pe.version = pe_version
+      pe.role = :agent
       pe.master = 'master.puppetlabs.vm'
     end
   end
