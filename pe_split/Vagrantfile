@@ -1,0 +1,64 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+IP_BASE = '10.10.100.'
+PE_VERSION = '3.7.2'
+
+def vm_resources(node)
+  node.vm.provider :vmware_fusion do |v|
+    v.vmx["memsize"]  = 2048
+    v.vmx["numvcpus"] = 2
+  end
+
+  node.vm.provider :virtualbox do |v|
+    v.memory = 2048
+    v.cpus = 2
+  end
+end
+
+def no_firewall(node)
+  node.vm.provision "shell",
+    inline: "systemctl stop firewalld"
+end
+
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "puppetlabs/centos-7.0-64-nocm"
+
+  split ={:master => IP_BASE+'100', :db => IP_BASE+'101', :console => IP_BASE+'102'}
+
+  split.each do |name, ip|
+    config.vm.define name do |node|
+
+      vm_resources(node)
+      node.vm.network :private_network, ip: ip
+
+      node.vm.hostname = "#{name}.puppetlabs.vm"
+      node.vm.provision :hosts do |h|
+        h.add_host split[:master], ['master.puppetlabs.vm','master','puppet']
+        h.add_host split[:db], ['db.puppetlabs.vm','db']
+        h.add_host split[:console], ['console.puppetlabs.vm','console']
+      end
+
+      no_firewall(node)
+
+      node.vm.provision :pe_bootstrap do |pe|
+        pe.version = PE_VERSION
+        pe.role = :master
+        pe.answer_file = "answers/#{name}.puppetlabs.vm.answers"
+      end
+    end
+  end
+
+  config.vm.define :agent do |node|
+    node.vm.network :private_network, ip: IP_BASE+'110'
+    node.vm.hostname  = 'agent.puppetlabs.vm'
+    node.vm.provision :pe_bootstrap do |pe|
+      pe.version = PE_VERSION
+      pe.role = :agent
+      pe.master = 'master.puppetlabs.vm'
+    end
+  end
+end

@@ -1,0 +1,29 @@
+########################################
+#
+# Puppet Enterprise 3.8 installer answers file
+# Flavor: "split"
+# Created: 2015-05-11 14:03:34 UTC
+# https://docs.puppetlabs.com/pe/3.8/install_answer_file_reference.html
+#
+########################################
+q_all_in_one_install='n'
+q_enable_future_parser='n'
+q_fail_on_unsuccessful_master_lookup='y'
+q_install='y'
+q_pe_check_for_updates='y'
+q_puppet_cloud_install='n'
+q_puppet_enterpriseconsole_install='n'
+q_puppetagent_certname='master.puppetlabs.vm'
+q_puppetagent_install='y'
+q_puppetagent_server='master.puppetlabs.vm'
+q_puppetdb_hostname='db.puppetlabs.vm'
+q_puppetdb_install='n'
+q_puppetdb_port='8081'
+q_puppetmaster_certname='master.puppetlabs.vm'
+q_puppetmaster_dnsaltnames='puppet,master,puppet.puppetlabs.vm'
+q_puppetmaster_enterpriseconsole_hostname='console.puppetlabs.vm'
+q_puppetmaster_enterpriseconsole_port='443'
+q_puppetmaster_install='y'
+q_skip_backup='y'
+q_skip_master_verification='n'
+q_vendor_packages_install='y'
