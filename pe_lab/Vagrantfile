@@ -5,10 +5,9 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "centos-64-x64-nocm"
-  config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-fusion503-nocm.box"
+  config.vm.box = "puppetlabs/centos-7.0-64-nocm"
 
-  pe_version = '3.3.1'
+  pe_version = '2015.2.0'
   config.pe_build.version       = pe_version
   config.pe_build.download_root = "https://s3.amazonaws.com/pe-builds/released/:version"
 
@@ -31,7 +30,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     master.vm.provision "shell",
-      inline: "service iptables stop"
+      inline: "service firewalld stop"
   end
 
 ## agent 1
