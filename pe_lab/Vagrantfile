@@ -48,57 +48,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       pe.master = 'master.puppetlabs.vm'
     end
   end
-
-## agent 2
-  config.vm.define :agent2 do |agent|
-
-    agent.vm.provider :vmware_fusion
-    agent.vm.network :private_network, ip: "10.10.100.112"
-
-    agent.vm.hostname = 'agent2.puppetlabs.vm'
-    agent.vm.provision :hosts
-
-    agent.vm.provision :pe_bootstrap do |pe|
-      pe.role   =  :agent
-      pe.master = 'master.puppetlabs.vm'
-    end
-  end
-
-## agent 3
-  config.vm.define :agent3 do |agent|
-
-    agent.vm.provider :vmware_fusion
-    agent.vm.network :private_network, ip: "10.10.100.113"
-
-    agent.vm.hostname = 'agent3.puppetlabs.vm'
-    agent.vm.provision :hosts
-
-    agent.vm.provision :pe_bootstrap do |pe|
-      pe.role   =  :agent
-      pe.master = 'master.puppetlabs.vm'
-    end
-  end
-
-
-   config.vm.define :master2 do |master|
-
-    master.vm.provider :vmware_fusion do |v|
-      v.vmx["memsize"]  = "1024"
-      v.vmx["numvcpus"] = "2"
-    end
-
-    master.vm.network :private_network, ip: "10.10.100.101"
-
-    master.vm.hostname = 'master2.puppetlabs.vm'
-    master.vm.provision :hosts
-
-    master.vm.provision :pe_bootstrap do |pe|
-      pe.role = :master
-    end
-
-    config.vm.provision "shell",
-      inline: "service iptables stop"
-
-  end
 end
 
